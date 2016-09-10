@@ -54,7 +54,7 @@ if __name__ == '__main__':
     return script
 
 def get_project_modules(root,project_name):
-    project_file = os.path.join(root, project_name + "_project.json")
+    project_file = os.path.join(root, project_name + ".project")
     with open(project_file) as f:
         modules = json.load(f)
     return modules
