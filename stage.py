@@ -20,7 +20,7 @@ def config_for_deployment(staging_path):
     fab_dst = os.path.join(staging_path,"fabfile.py")
     shutil.copy2(fab_src,fab_dst)
     fabfile_args = "config_for_deployment:path={0}".format(staging_path)
-    subprocess.Popen(["fab",fabfile_args],cwd=staging_path)
+    subprocess.call(["fab",fabfile_args],cwd=staging_path)
 
 
 def clone_app(app_name):
@@ -32,6 +32,12 @@ def clean_staging_dir(app_name):
     path = get_staging_path(app_name)
     if os.path.isdir(path):
         print "Cleaning staging area for {app}".format(app=app_name)
+
+        # Remove the .git dir using command-prompt 'remove directory' tool to avoid 
+        # 'Access Denied' issues
+        git_path = os.path.join(path,".git")
+        if os.path.isdir(git_path):
+            subprocess.call("RD /S /Q {0}".format(git_path),shell=True)
         shutil.rmtree(path)
 
 def test_app_exists(app_name):

@@ -12,7 +12,9 @@ def config_for_deployment(path):
     configure_git(app_name)
 
 def configure_git(app_name):
-    local("git s")
+    local("git init")
+    local("git add *")
+    local("git commit -m \"ready for deployment\"")
 
 class StagedApp:
 
