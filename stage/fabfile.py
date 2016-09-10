@@ -3,7 +3,7 @@ import shutil
 import json
 from fabric.api import local
 
-def config_for_deployment(path):
+def prepare_for_deployment(path):
     app_name = os.path.basename(path)
 
     staged_app = StagedApp(path)

@@ -10,18 +10,17 @@ def stage_app(app_name):
 
     clean_staging_dir(app_name)
     clone_app(app_name)
-
-    staging_path = get_staging_path(app_name)
-    config_for_deployment(staging_path)
+    start_fabric(app_name)
     return True
 
-def config_for_deployment(staging_path):
-    fab_src = ".\\fabfile.py" 
+def start_fabric(app_name):
+    staging_path = get_staging_path(app_name)
+    fabric_path = get_fabric_path()
+    fab_src = os.path.join(fabric_path,"stage","fabfile.py")
     fab_dst = os.path.join(staging_path,"fabfile.py")
     shutil.copy2(fab_src,fab_dst)
-    fabfile_args = "config_for_deployment:path={0}".format(staging_path)
+    fabfile_args = "prepare_for_deployment:path={0}".format(staging_path)
     subprocess.call(["fab",fabfile_args],cwd=staging_path)
-
 
 def clone_app(app_name):
     src = get_app_path(app_name)
@@ -42,19 +41,16 @@ def clean_staging_dir(app_name):
 
 def test_app_exists(app_name):
     app_path = get_app_path(app_name)
-    has_git_dir = os.path.isdir(os.path.join(app_path,".git"))
-    is_project = os.path.isfile(os.path.join(app_path,"__init__.py"))
-    is_deployable = os.path.isfile(os.path.join(app_path,"deploy.json"))
+    has_git_dir     = os.path.isdir(os.path.join(app_path,".git"))
+    is_project      = os.path.isfile(os.path.join(app_path,"__init__.py"))
+    is_deployable   = os.path.isfile(os.path.join(app_path,"deploy.json"))
     return has_git_dir and is_project and is_deployable
 
 def get_staging_path(app_name):
-    return os.path.join(get_fabric_path(),"staging",app_name)
+    return os.path.join(get_fabric_path(),"staged_apps",app_name)
 
 def get_app_path(app_name):
     return os.path.join(get_fabric_path(),"..",app_name)
 
 def get_fabric_path():
-    return os.path.dirname(os.path.realpath(__file__))
-
-if __name__ == "__main__":
-    stage_app("chris_profile")
+    return os.path.dirname(os.path.dirname(os.path.realpath(__file__)))

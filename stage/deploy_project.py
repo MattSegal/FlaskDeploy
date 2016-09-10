@@ -5,6 +5,19 @@ import os.path
 import shutil
 from flask_app import FlaskApp
 
+INIT_TEMPLATE = """
+from flask import Flask
+app = Flask(__name__)
+
+{imports}
+{register}
+
+if __name__ == '__main__':
+app.run(host= '0.0.0.0',debug={debug})
+"""
+IMPORT_TEMPLATE = "from {0} import *"
+REGISTER_TEMPLATE = "app.register_blueprint({0})"
+
 def main(project_name,debug=False):
     """ Deploys Flask projects to flask_deploy directory
     """
@@ -35,22 +48,12 @@ def main(project_name,debug=False):
 
     print "... project done."
 
-
 def build_init_script(modules,debug):
     # This is some fully sick metaprogramming right here.
-    module_imports = "\n".join(["from {0} import *".format(module) for module in modules])
-    module_register = "\n".join(["app.register_blueprint({0})".format(module) for module in modules])
+    module_imports = "\n".join([IMPORT_TEMPLATE.format(module) for module in modules])
+    module_register = "\n".join([REGISTER_TEMPLATE.format(module) for module in modules])
 
-    script = """
-from flask import Flask
-app = Flask(__name__)
-
-{imports}
-{register}
-
-if __name__ == '__main__':
-    app.run(host= '0.0.0.0',debug={debug})
-    """.format(imports=module_imports, register=module_register, debug=debug)
+    script = INIT_TEMPLATE.format(imports=module_imports, register=module_register, debug=debug)
     return script
 
 def get_project_modules(root,project_name):
