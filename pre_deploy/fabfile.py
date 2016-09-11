@@ -1,5 +1,6 @@
 import os.path
 import shutil
+import subprocess
 import json
 from fabric.api import local
 
@@ -9,9 +10,9 @@ def prepare_for_deployment(path):
     staged_app = StagedApp(path)
     staged_app.prune()
 
-    configure_git(app_name)
-
 def configure_git(app_name):
+    """ Not used at the moment
+    """
     local("git init")
     local("git add *")
     local("git commit -m \"ready for deployment\"")
@@ -38,6 +39,13 @@ class StagedApp:
         """ Removes unwanted files and folders from the application.
         """
         print "Pruning non deployables from {app}".format(app=self.app_name)
+
+        # Remove the .git dir using command-prompt 'remove directory' tool to avoid 
+        # 'Access Denied' issues
+        git_path = os.path.join(self.path,".git")
+        if os.path.isdir(git_path):
+            subprocess.call("RD /S /Q {0}".format(git_path),shell=True)
+
         self._remove_invalid_files(self.path)
 
     def _remove_invalid_files(self,path):

@@ -16,11 +16,13 @@ def stage_app(app_name):
 def start_fabric(app_name):
     staging_path = get_staging_path(app_name)
     fabric_path = get_fabric_path()
-    fab_src = os.path.join(fabric_path,"stage","fabfile.py")
+    fab_src = os.path.join(fabric_path,"pre_deploy","fabfile.py")
     fab_dst = os.path.join(staging_path,"fabfile.py")
     shutil.copy2(fab_src,fab_dst)
     fabfile_args = "prepare_for_deployment:path={0}".format(staging_path)
     subprocess.call(["fab",fabfile_args],cwd=staging_path)
+    fabfile = os.path.join(staging_path,"fabfile.py")
+    subprocess.call("DEL /F /Q  {0}".format(fabfile),shell=True)
 
 def clone_app(app_name):
     src = get_app_path(app_name)

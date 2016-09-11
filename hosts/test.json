@@ -1,0 +1,7 @@
+{
+	"username" 	: "vagrant",
+	"password" 	: "vagrant",
+	"url" 		: "127.0.0.1",
+	"alias"		: "localhost",
+	"port" 		: "2222"
+}

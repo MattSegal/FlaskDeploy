@@ -1,0 +1,14 @@
+[
+    {
+        "name"      : "test",
+        "sub_url"   : "/test",
+        "path"   	: "/var/www/test",
+        "deploy" 	: true
+    },
+    {
+        "name"      : "chris_profile",
+        "sub_url"   : "/",
+        "path"   	: "/var/www/chris_profile",
+        "deploy" 	: true
+    }
+]
