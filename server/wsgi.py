@@ -12,4 +12,4 @@ if project not in sys.path:
     sys.path.insert(0,project)
 
 from __init__ import app as application
-application.secret_key = 'rer236et7wy27ye327'
+application.secret_key = 'rer236et7wy27ye327' # Source from config
