@@ -1,33 +1,34 @@
 param(
-    [string] $ProjectName,
-    [string] $HostName
+    [String] $ProjectName,
+    [String] $HostName,
+    [String] $BranchName = "master"
 )
 
 # Run this script to deploy your project to a host
-# This script just a workaround because I can't be bothered using
-# Fabric the way it was intended yet
+# This script wraps fab because PowerShell is nice to invoke.
 
-# Print all projects and hosts is parameters are not provided
-if ((-not $ProjectName) -or (-not $HostName))
+if ($ProjectName -and $HostName)
 {
+    & fab deploy --set host_name=$HostName,project_name=$ProjectName,branch_name=$BranchName
+}
+else 
+{
+   # Print all projects and hosts
     Write-Host "`nHosts:"
     $hostDir = Join-Path $PSScriptRoot "hosts"
     $hostFiles = Get-ChildItem -Path $hostDir
-    foreach ($hostFile in $hostFiles)
+    ForEach ($hostFile in $hostFiles)
     {
         Write-Host "`n"(([String]$hostFile).Split('.'))[0]
         Get-Content (Join-Path $hostDir $hostFile)
     }
+
     Write-Host "`nProjects:"
     $projectDir = Join-Path $PSScriptRoot "projects"
     $projectFiles = Get-ChildItem -Path $projectDir
-    foreach ($projectFile in $projectFiles)
+    ForEach ($projectFile in $projectFiles)
     {
         Write-Host "`n"(([String]$projectFile).Split('.'))[0]
         Get-Content (Join-Path $projectDir $projectFile)
     }
-}
-else 
-{
-    & fab set_host:host_name=$HostName deploy:project_name=$ProjectName
 }

@@ -97,7 +97,8 @@ class FlaskProject:
 class Apache:
     def __init__(self):
         self.applications = []
-        self.config_file = "/etc/apache2/sites-available/flask.conf"
+        self.apache_config_file = "/etc/apache2/apache2.conf"
+        self.flask_config_file = "/etc/apache2/sites-available/flask.conf"
         with open(apache_file,"r") as f:
             self.config_template = f.read()
 
@@ -114,6 +115,12 @@ class Apache:
         self.applications.append(app)
 
     def write_config(self,server):
+        # Write apache2.conf
+        config_content = "\nServerName localhost"
+        if not files.contains(self.apache_config_file,config_content,use_sudo=True):
+            files.append(self.apache_config_file,config_content, use_sudo=True)
+
+        # Write flask.conf
         for app in self.applications:
             app["wsgi_file"] = WSGI.get_file_path(app)
 
@@ -134,12 +141,12 @@ class Apache:
         directories = "\n".join([directory_template.format(**app) for app in self.applications])
 
         config_content = self.config_template.format(url=server["url"],alias=server["alias"],directories=directories,aliases=aliases)
-        files.append(self.config_file, config_content, use_sudo=True)
+        files.append(self.flask_config_file, config_content, use_sudo=True)
 
     def clean_config(self):
-        if files.exists(self.config_file,use_sudo=True):
-            sudo("rm -f {0}".format(self.config_file))
-        sudo("touch {0}".format(self.config_file))
+        if files.exists(self.flask_config_file,use_sudo=True):
+            sudo("rm -f {0}".format(self.flask_config_file))
+        sudo("touch {0}".format(self.flask_config_file))
 
     def disable_sites(self):
         is_valid_site = lambda s: s not in ["000-default",""]
