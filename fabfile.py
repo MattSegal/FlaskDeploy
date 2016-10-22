@@ -6,8 +6,8 @@ import pre_deploy
 import server
 host = ""
 
-def deploy(proj):
-    project_file = "projects\\{0}.json".format(proj)
+def deploy(project_name):
+    project_file = "projects\\{0}.json".format(project_name)
 
     with open(project_file,"r") as f:
         apps = json.load(f)
@@ -18,13 +18,6 @@ def deploy(proj):
     server.setup(apps,host)
 
 # This is a hack because fabric is being a dick
-def pi():
-    host_name = "pi"
-    set_host(host_name)
-
-def test():
-    host_name = "test"
-    set_host(host_name)
     
 def set_host(host_name):
     host_file = "hosts\\{0}.json".format(host_name)

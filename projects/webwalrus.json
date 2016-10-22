@@ -1,0 +1,38 @@
+[
+    {
+        "name"      : "test",
+        "sub_url"   : "/test",
+        "path"      : "/var/www/test",
+        "deploy"    : true
+    },
+    {
+        "name"      : "landing",
+        "sub_url"   : "/",
+        "path"      : "/var/www/landing",
+        "deploy"    : true
+    },
+    {
+        "name"      : "resume",
+        "sub_url"   : "/resume",
+        "path"      : "/var/www/resume",
+        "deploy"    : true
+    },
+    {
+        "name"      : "visual_algo",
+        "sub_url"   : "/sort",
+        "path"      : "/var/www/visual_algo",
+        "deploy"    : true
+    },
+    {
+        "name"      : "queens_speech",
+        "sub_url"   : "/words",
+        "path"      : "/var/www/queens_speech",
+        "deploy"    : false
+    },
+        {
+        "name"      : "links",
+        "sub_url"   : "/links",
+        "path"      : "/var/www/links",
+        "deploy"    : false
+    }
+]
