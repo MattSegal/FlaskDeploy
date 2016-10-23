@@ -1,7 +1,11 @@
 import os
 import json
+import getpass
+from functools import reduce
 from fabric.api import task, env, run, sudo, put
 import fabric.contrib.files as files
+
+from server_utility import *
 
 script_dir  = os.path.dirname(os.path.realpath(__file__))
 bashrc_file = os.path.join(script_dir,os.path.normpath("./.bashrc"))
@@ -12,7 +16,7 @@ staged_apps_dir = os.path.join(script_dir,"..\staged_apps")
 def setup(apps,host):
     set_bash_rc()
     set_timezone()
-    install_packages()
+    install_packages(apps)
     install_flask_apps(apps,host)
     # ssh stuff
 
@@ -33,23 +37,35 @@ def set_timezone():
     sudo("rm {0}".format(localtime_path))
     sudo("ln -s {0} {1}".format(AEST_path,localtime_path))
 
-def install_packages():
+def install_packages(apps):
     packages = [
         "apache2",
         "libapache2-mod-wsgi",
         "python-pip",
         "curl"
     ]
-    manager = PackageManager (packages)
+
+    optional_packages = [
+        "mysql-server"
+    ]
+
+    for app in apps:
+        if "packages" not in app.keys():
+            continue
+
+        selected_packages = [p for p in app["packages"] if p in optional_packages]
+        packages += selected_packages
+
+    packages = set(packages)
+    manager = PackageManager(packages)
     manager.ensure_installed()
 
 def install_flask_apps(apps,host):
-
-    packages = ["flask"]
-    pip = Pip(packages)
-    pip.ensure_installed()
-
     flask = FlaskProject(apps)
+
+    requirements_files = flask.get_app_requirements()
+    pip = Pip(requirements_files)
+    pip.ensure_installed()
 
     apache = Apache()
     apache.disable_sites()
@@ -93,6 +109,14 @@ class FlaskProject:
 
     def get_app_path(self,name):
         return os.path.join(staged_apps_dir,name)
+
+    def get_app_requirements(self):
+        app_paths = [self.get_app_path(app["name"]) for app in self.apps]
+        print app_paths
+        get_filename = lambda path : os.path.join(path,'requirements.txt')
+        file_exists  = lambda path : os.path.exists(get_filename(path))
+        requirement_files = [get_filename(path) for path in app_paths if file_exists(path)]
+        return requirement_files
 
 class Apache:
     def __init__(self):
@@ -172,7 +196,20 @@ class WSGI:
         return os.path.join(app["path"],"wsgi.py").replace("\\","/")
    
 class Pip():
-    def __init__(self,packages):
+    def __init__(self,requirements_files):
+        packages = [
+            "flask"
+        ]
+
+        # Load all requirements
+        for r_file in requirements_files:
+            with open (r_file,'r') as f:
+                requirements = f.read()
+            packages+= requirements.split('\n')
+
+        # Get rid of duplicates, ignore version numbers
+        format_name = lambda name : name.split('==')[0].lower()
+        packages = set([format_name(p) for p in packages])
         self.packages = packages
 
     def ensure_installed(self):
@@ -183,6 +220,8 @@ class Pip():
                 sudo("pip install {0}".format(package))
 
 class PackageManager:
+    """ Handles installation of Debian packages
+    """
     def __init__(self,packages):
         self.packages = packages
 
@@ -197,10 +236,28 @@ class PackageManager:
 
         if required_packages:
             sudo("apt-get -qq update")
-            for p in required_packages:
-                sudo("apt-get -qq install {0} -y".format(p))
+            for package_name in required_packages:
+                if package_name == "mysql-server":
+                    self._install_mysql()
+                else:
+                    sudo("apt-get -qq install {0} -y".format(package_name))
         else:
             print "All packages have already been installed."
+
+    def _install_mysql(self):
+        sudo("export DEBIAN_FRONTEND=noninteractive apt-get -qq -y install mysql-server")
+
+        # Set password
+        print "\n ===== TEMPOARY WORKAROUND ====="
+        print "This is bad and you should feel bad"
+        password_1 = True
+        password_2 = False
+
+        while password_1 != password_2:
+            password_1 = getpass.getpass("MYSQL Password: ")
+            password_2 = getpass.getpass("Confirm MYSQL Password: ")
+            if password_1 == password_2:
+                run("mysqladmin -u root password {0}".format(password_1))
 
     def is_package_installed(self,name):
         """ Use Debian Package Manager output to check for package

@@ -10,13 +10,6 @@ def prepare_for_deployment(path):
     staged_app = StagedApp(path)
     staged_app.prune()
 
-def configure_git(app_name):
-    """ Not used at the moment
-    """
-    local("git init")
-    local("git add *")
-    local("git commit -m \"ready for deployment\"")
-
 class StagedApp:
 
     def __init__(self,path):

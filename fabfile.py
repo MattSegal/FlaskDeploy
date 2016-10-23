@@ -1,8 +1,6 @@
 import sys
 import json
-import re
-from StringIO import StringIO
-from fabric.api import env, task, sudo
+from fabric.api import env, task
 
 import pre_deploy
 import server
@@ -36,12 +34,11 @@ def deploy():
     # Deploy
     server.setup(apps,host)
 
-def get_error_logs(num_lines=10):
-    error_log_path = "/var/log/apache2/error.log"
-    outputIO = StringIO()
-    sudo("tail {0} --lines={1} --verbose".format(error_log_path,num_lines),stdout=outputIO)
-    fabric_output_regex = '(\[\S+\]) out: '
-    output = outputIO.getvalue()
-    outputIO.close()
-    output = re.sub(fabric_output_regex,'',output)
-    print output
+def print_error_logs(num_lines):
+    server.print_error_logs(num_lines)
+
+def print_access_logs(num_lines):
+    server.print_access_logs(num_lines)
+
+def restart_apache():
+    server.restart_apache()
