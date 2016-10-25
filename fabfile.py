@@ -35,10 +35,10 @@ def deploy():
     server.setup(apps,host)
 
 def print_error_logs(num_lines):
-    server.print_error_logs(num_lines)
+    server.ServerUtils.print_error_logs(num_lines)
 
 def print_access_logs(num_lines):
-    server.print_access_logs(num_lines)
+    server.ServerUtils.print_access_logs(num_lines)
 
 def restart_apache():
-    server.restart_apache()
+    server.ServerUtils.restart_apache()

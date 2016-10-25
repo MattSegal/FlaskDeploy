@@ -1,14 +1,22 @@
-#!/usr/bin/python
-import sys
 import os
-import logging
+from fabric.api import sudo
+import fabric.contrib.files as files
 
-logging.basicConfig(stream=sys.stderr)
+script_dir  = os.path.dirname(os.path.realpath(__file__))
+wsgi_file   = os.path.join(script_dir,"wsgi_template.py")
 
-# path of project is the directory containing the wsgi file
-project = os.path.dirname(__file__)
-path = os.path.dirname(project)
-if project not in sys.path:
-    sys.path.insert(0,project)
+with open(wsgi_file,"r") as f:
+    wsgi_content = f.read()
 
-from __init__ import app as application
+class WSGI:
+
+    @staticmethod
+    def upload_wgsi_file(app):
+        target_wsgi_path = WSGI.get_file_path(app)
+        sudo("touch {0}".format(target_wsgi_path))
+        files.append(target_wsgi_path,wsgi_content, use_sudo=True)
+
+    @staticmethod
+    def get_file_path(app):
+        return os.path.join(app["path"],"wsgi.py").replace("\\","/")
+   
