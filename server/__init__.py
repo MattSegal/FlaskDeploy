@@ -38,4 +38,4 @@ def setup(apps,host):
     apache.start_website()
     apache.restart()
 
-    # TODO: Setup SSH key + PuTTY for easy access
+    # TODO: Setup SSH key + PuTTY for easy remote access
