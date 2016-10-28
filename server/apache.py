@@ -30,7 +30,7 @@ class Apache:
 
     def write_config(self,server):
         # Write apache2.conf
-        config_content = "\nServerName localhost"
+        config_content = "\nServerName 127.0.1.1"
         if not files.contains(APACHE_CONFIG_FILE,config_content,use_sudo=True):
             files.append(APACHE_CONFIG_FILE,config_content, use_sudo=True)
 
