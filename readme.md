@@ -21,11 +21,6 @@ Setup webwalrus and deploy it to vagrant server
 **To Do**
   
 * Remove security holes - it is probably a dumb idea to list IPs in source
-* Add post deployment scripts (explain why you need this)
 * Add support for MYSQL
-* Add SSH setup
 * Add MYSQL database backup and restore functionality
-* finish server_utility.py
-    - error logs
-    - access logs
-    - restart apache
+* Add SSH setup

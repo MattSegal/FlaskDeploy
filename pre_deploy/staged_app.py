@@ -2,14 +2,6 @@ import os.path
 import shutil
 import subprocess
 import json
-from fabric.api import local
-
-def prepare_for_deployment(path):
-    app_name = os.path.basename(path)
-
-    staged_app = StagedApp(path)
-    staged_app.prune()
-    assert False, "DEBUG"
 
 class StagedApp:
 
@@ -46,11 +38,11 @@ class StagedApp:
         """ Recursively removes invalid files and folders
         """
         for _file in self._get_production_files(path):
-            transformed_name = _file.strip('.prod')
-            transformed_name_already_exists = os.path.isfile(os.path.join(path,transformed_name))
-            if transformed_name_already_exists:
-                os.remove(transformed_name)
-            os.rename(_file,transformed_name)
+            original_file = os.path.join(path,_file)
+            transformed_file = os.path.join(path,_file.strip('.prod'))
+            if os.path.isfile(transformed_file):
+                os.remove(transformed_file)
+            os.rename(original_file,transformed_file)
 
         for _file in self._get_invalid_files(path):
             file_path = os.path.join(path,_file)

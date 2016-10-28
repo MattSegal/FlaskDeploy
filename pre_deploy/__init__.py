@@ -2,6 +2,8 @@ import os.path
 import shutil
 import subprocess
 
+from staged_app import StagedApp
+
 def stage_app(app_name,branch_name):
     if not test_app_exists(app_name):
         print "Flask app {app} was not found".format(app=app_name)
@@ -10,19 +12,12 @@ def stage_app(app_name,branch_name):
 
     clean_staging_dir(app_name)
     clone_app(app_name,branch_name)
-    start_fabric(app_name)
-    return True
-
-def start_fabric(app_name):
+    
     staging_path = get_staging_path(app_name)
-    fabric_path = get_fabric_path()
-    fab_src = os.path.join(fabric_path,"pre_deploy","fabfile.py")
-    fab_dst = os.path.join(staging_path,"fabfile.py")
-    shutil.copy2(fab_src,fab_dst)
-    fabfile_args = "prepare_for_deployment:path={0}".format(staging_path)
-    subprocess.call(["fab",fabfile_args],cwd=staging_path)
-    fabfile = os.path.join(staging_path,"fabfile.py")
-    subprocess.call("DEL /F /Q  {0}".format(fabfile),shell=True)
+    staged_app = StagedApp(staging_path)
+    staged_app.prune()
+
+    return True
 
 def clone_app(app_name,branch_name):
     # Clone repo
