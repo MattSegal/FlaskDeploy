@@ -9,6 +9,7 @@ def prepare_for_deployment(path):
 
     staged_app = StagedApp(path)
     staged_app.prune()
+    assert False, "DEBUG"
 
 class StagedApp:
 
@@ -44,6 +45,13 @@ class StagedApp:
     def _remove_invalid_files(self,path):
         """ Recursively removes invalid files and folders
         """
+        for _file in self._get_production_files(path):
+            transformed_name = _file.strip('.prod')
+            transformed_name_already_exists = os.path.isfile(os.path.join(path,transformed_name))
+            if transformed_name_already_exists:
+                os.remove(transformed_name)
+            os.rename(_file,transformed_name)
+
         for _file in self._get_invalid_files(path):
             file_path = os.path.join(path,_file)
             os.remove(file_path)
@@ -64,6 +72,9 @@ class StagedApp:
 
     def _get_dirs(self,path):
         return (x for x in os.listdir(path) if os.path.isdir(os.path.join(path,x)))
+
+    def _get_production_files(self,path):
+        return (x for x in os.listdir(path) if os.path.isfile(os.path.join(path,x)) and x.endswith('.prod'))
 
     def _get_invalid_files(self,path):
         files = (x for x in os.listdir(path) if os.path.isfile(os.path.join(path,x)))

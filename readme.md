@@ -9,6 +9,11 @@ Sets up a fresh Linux box to use apache2 and mod-wsgi, then deploys a set of Fla
 Eg.
 > .\deploy.ps1 -ProjectName test -HostName test
 
+**Features**
+
+Files named *.prod will be transformed to * and stomp existing files.
+Possible to deploy specific branches (applied to whole project)
+
 **Goals**
 
 Setup webwalrus and deploy it to vagrant server
@@ -16,8 +21,6 @@ Setup webwalrus and deploy it to vagrant server
 **To Do**
   
 * Remove security holes - it is probably a dumb idea to list IPs in source
-* Add ability to target specific branches for release
-* Support config.prod transforms
 * Add post deployment scripts (explain why you need this)
 * Add support for MYSQL
 * Add SSH setup
