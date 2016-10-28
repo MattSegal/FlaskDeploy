@@ -27,9 +27,10 @@ def deploy():
         apps = json.load(f)
 
     # Stage applications
+    branch_name = env.branch_name
     for app in apps:
         # use branch_name here
-        pre_deploy.stage_app(app["name"])
+        pre_deploy.stage_app(app["name"],branch_name)
 
     # Deploy
     server.setup(apps,host)
