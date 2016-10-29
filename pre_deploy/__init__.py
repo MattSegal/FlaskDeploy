@@ -2,33 +2,42 @@ import os.path
 import shutil
 import subprocess
 
-def stage_app(app_name):
+from staged_app import StagedApp
+
+def stage_app(app_name,branch_name):
     if not test_app_exists(app_name):
         print "Flask app {app} was not found".format(app=app_name)
         return False
     print "Found flask app {app}".format(app=app_name)
 
     clean_staging_dir(app_name)
-    clone_app(app_name)
-    start_fabric(app_name)
+    clone_app(app_name,branch_name)
+    
+    staging_path = get_staging_path(app_name)
+    staged_app = StagedApp(staging_path)
+    staged_app.prune()
+
     return True
 
-def start_fabric(app_name):
-    staging_path = get_staging_path(app_name)
-    fabric_path = get_fabric_path()
-    fab_src = os.path.join(fabric_path,"pre_deploy","fabfile.py")
-    fab_dst = os.path.join(staging_path,"fabfile.py")
-    shutil.copy2(fab_src,fab_dst)
-    fabfile_args = "prepare_for_deployment:path={0}".format(staging_path)
-    subprocess.call(["fab",fabfile_args],cwd=staging_path)
-    fabfile = os.path.join(staging_path,"fabfile.py")
-    subprocess.call("DEL /F /Q  {0}".format(fabfile),shell=True)
-
-def clone_app(app_name):
+def clone_app(app_name,branch_name):
+    # Clone repo
     src = get_app_path(app_name)
     dst = get_staging_path(app_name)
     subprocess.call(["git","clone",src,dst])
 
+    # Checkout branch name if available
+    working_directory = get_staging_path(app_name)
+    print "working dir " + working_directory
+    process = subprocess.Popen("git branch -a",stdout=subprocess.PIPE,cwd=working_directory)
+    out, err = process.communicate()
+    print "git branches:\n" + out
+    if branch_name in out:
+        subprocess.call(["git","checkout",branch_name], cwd=working_directory)
+    else:
+        print "Git branch {0} was not found.".format(branch_name)
+        assert "master" in out, "Repository {0} must have a 'master' branch.".format(app_name)
+        subprocess.call(["git","checkout","master"],cwd=working_directory)
+        
 def clean_staging_dir(app_name):
     path = get_staging_path(app_name)
     if os.path.isdir(path):

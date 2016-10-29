@@ -2,20 +2,6 @@ import os.path
 import shutil
 import subprocess
 import json
-from fabric.api import local
-
-def prepare_for_deployment(path):
-    app_name = os.path.basename(path)
-
-    staged_app = StagedApp(path)
-    staged_app.prune()
-
-def configure_git(app_name):
-    """ Not used at the moment
-    """
-    local("git init")
-    local("git add *")
-    local("git commit -m \"ready for deployment\"")
 
 class StagedApp:
 
@@ -51,6 +37,13 @@ class StagedApp:
     def _remove_invalid_files(self,path):
         """ Recursively removes invalid files and folders
         """
+        for _file in self._get_production_files(path):
+            original_file = os.path.join(path,_file)
+            transformed_file = os.path.join(path,_file.strip('.prod'))
+            if os.path.isfile(transformed_file):
+                os.remove(transformed_file)
+            os.rename(original_file,transformed_file)
+
         for _file in self._get_invalid_files(path):
             file_path = os.path.join(path,_file)
             os.remove(file_path)
@@ -71,6 +64,9 @@ class StagedApp:
 
     def _get_dirs(self,path):
         return (x for x in os.listdir(path) if os.path.isdir(os.path.join(path,x)))
+
+    def _get_production_files(self,path):
+        return (x for x in os.listdir(path) if os.path.isfile(os.path.join(path,x)) and x.endswith('.prod'))
 
     def _get_invalid_files(self,path):
         files = (x for x in os.listdir(path) if os.path.isfile(os.path.join(path,x)))
