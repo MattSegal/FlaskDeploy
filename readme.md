@@ -24,3 +24,4 @@ Setup webwalrus and deploy it to vagrant server
 * Add support for MYSQL
 * Add MYSQL database backup and restore functionality
 * Add SSH setup
+* Add zip and transfer step to reduce deploy time
