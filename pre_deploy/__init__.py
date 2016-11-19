@@ -1,4 +1,4 @@
-import os.path
+import os
 import shutil
 import subprocess
 
@@ -24,6 +24,14 @@ def clone_app(app_name,branch_name):
     src = get_app_path(app_name)
     dst = get_staging_path(app_name)
     subprocess.call(["git","clone",src,dst])
+
+    # Copy production config file (config.prod) files in base
+    config_file = 'config.py.prod'
+    config_file_src = os.path.join(src,config_file)
+    config_file_dst = os.path.join(dst,config_file)
+
+    if os.path.exists(config_file_src):
+        shutil.copyfile(config_file_src,config_file_dst)
 
     # Checkout branch name if available
     working_directory = get_staging_path(app_name)
@@ -61,7 +69,7 @@ def get_staging_path(app_name):
     return os.path.join(get_fabric_path(),"staged_apps",app_name)
 
 def get_app_path(app_name):
-    return os.path.join(get_fabric_path(),"..",app_name)
+    return os.path.abspath(os.path.join(get_fabric_path(),"..",app_name))
 
 def get_fabric_path():
     return os.path.dirname(os.path.dirname(os.path.realpath(__file__)))

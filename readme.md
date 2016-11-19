@@ -25,3 +25,10 @@ Setup webwalrus and deploy it to vagrant server
 * Add MYSQL database backup and restore functionality
 * Add SSH setup
 * Add zip and transfer step to reduce deploy time
+
+**Branching**
+
+Ideally all new work should be done on dev and then merged into master when it seems to work ok. This is done so that there is always an easily accesible working instance of the app.
+
+* master - last working iteration, should work
+* dev - add new features, might not work
