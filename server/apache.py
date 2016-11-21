@@ -2,8 +2,6 @@ import os
 from fabric.api import sudo
 import fabric.contrib.files as files
 
-from wsgi import WSGI
-
 APACHE_CONFIG_FILE = "/etc/apache2/apache2.conf"
 FLASK_CONFIG_FILE = "/etc/apache2/sites-available/flask.conf"
 
@@ -36,7 +34,7 @@ class Apache:
 
         # Write flask.conf
         for app in self.applications:
-            app["wsgi_file"] = WSGI.get_file_path(app)
+            app["wsgi_file"] = os.path.join(app["path"],"wsgi.py").replace("\\","/")
 
         alias_template = "WSGIScriptAlias {0} {1}"
         non_root_aliases = [app for app in self.applications if app["sub_url"] != "/"]

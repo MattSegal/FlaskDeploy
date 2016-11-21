@@ -16,13 +16,27 @@ class FlaskProject:
         put(local_path=src,remote_path=os.path.dirname(dst),use_sudo=True)
 
     @staticmethod
-    def get_app_requirements(apps):
+    def get_pip_requirements(apps):
         deployable_apps = FlaskProject.get_deployable_apps(apps)
         app_staging_paths = [FlaskProject.get_app_path(app["name"]) for app in deployable_apps]
-        print app_staging_paths
-        get_filename = lambda path : os.path.join(path,'requirements.txt')
-        file_exists  = lambda path : os.path.exists(get_filename(path))
-        requirement_files = [get_filename(path) for path in app_staging_paths if file_exists(path)]
+
+        requirement_files = []
+        for path in app_staging_paths:
+            requirement_file = os.path.join(path,'requirements.txt')
+            assert os.path.exists(requirement_file), requirement_file + " must exists."
+            requirement_files.append(requirement_file)
+        return requirement_files
+
+    @staticmethod
+    def get_debian_requirements(apps):
+        deployable_apps = FlaskProject.get_deployable_apps(apps)
+        app_staging_paths = [FlaskProject.get_app_path(app["name"]) for app in deployable_apps]
+
+        requirement_files = []
+        for path in app_staging_paths:
+            requirement_file = os.path.join(path,'debian.txt')
+            assert os.path.exists(requirement_file), requirement_file + " must exists."
+            requirement_files.append(requirement_file)
         return requirement_files
 
     @staticmethod

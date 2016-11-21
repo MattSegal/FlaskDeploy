@@ -60,6 +60,7 @@ class StagedApp:
         for el in self._get_dirs(path):
             is_deployable = os.path.basename(el) in self.dir_config["deployable"]
             if not is_deployable:
+                print "\tdeleting directory {dir}".format(dir=el)
                 yield el
 
     def _get_dirs(self,path):
@@ -72,7 +73,8 @@ class StagedApp:
         files = (x for x in os.listdir(path) if os.path.isfile(os.path.join(path,x)))
         for el in files:
             is_correct_file_type    = el.split(".")[-1] in self.file_config["file_types"]
-            is_deployable           = el in self.file_config["deployable"]
+            is_deployable           = el in self.file_config["deployable"] or el in ["requirements.txt","debian.txt"]
             is_non_deployable       = el in self.file_config["non-deployable"]
             if is_non_deployable or not (is_correct_file_type or is_deployable):
+                print "\tdeleting file {file}".format(file=el)
                 yield el
