@@ -18,6 +18,7 @@ The app works as follows:
 **Flask App Project Structure**
 
 This is the assumed project structure of Flask apps that this tool deploys
+See [this repository](https://github.com/MattSegal/ChrisRoddWebsite) for an example of a compatible app.
 ```
 .
 ├── app
@@ -29,6 +30,20 @@ This is the assumed project structure of Flask apps that this tool deploys
 ├── debian.txt          debian packages installed (required) 
 ├── config.py.prod      will be transformed to config.py
 └── config.py           will be deleted
+```
+
+These scripts also assume the following relationship:
+```
+.
+├── flask_deploy
+│   ├── hosts
+│   ├── pre_deploy
+│   └── etc ... 
+│
+└── target_flask_app
+    ├── app
+    ├── wsgi.py
+    └── etc ... 
 ```
 
 **Goals**
