@@ -21,14 +21,14 @@ This is the assumed project structure of Flask apps that this tool deploys
 ```
 .
 ├── app
-│   └── __init__.py     _(required)_
+│   └── __init__.py     (required)
 │
-├── wsgi.py             _(required)_
-├── deploy.json         _determines which files are pruned/deployed (required)_
-├── requirements.txt    _python packages installed (required)_
-├── debian.txt          _debian packages installed (required)_ 
-├── config.py.prod      _will be transformed to config.py_
-└── config.py           _will be deleted_
+├── wsgi.py             (required)
+├── deploy.json         determines which files are pruned/deployed (required)
+├── requirements.txt    python packages installed (required)
+├── debian.txt          debian packages installed (required) 
+├── config.py.prod      will be transformed to config.py
+└── config.py           will be deleted
 ```
 
 **Goals**
