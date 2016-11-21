@@ -6,32 +6,33 @@ class PackageManager:
     """ Handles installation of Debian packages
     """
     @staticmethod
-    def get_required_packages(apps):
-        packages = [
+    def ensure_installed(debian_package_files):
+        supported_packages = [
             "apache2",
             "libapache2-mod-wsgi",
             "python-pip",
-            "curl"
-        ]
-
-        optional_packages = [
+            "curl",
             "mysql-server"
         ]
 
-        for app in apps:
-            if "packages" not in app.keys():
-                continue
+        packages = []
 
-            selected_packages = [p for p in app["packages"] if p in optional_packages]
-            packages += selected_packages
-        return packages
+       # Load all requirements
+        for req_file in debian_package_files:
+            with open(req_file,'r') as f:
+                requirements = f.read()
+            packages+= requirements.split('\n')
+            os.remove(req_file)
 
-    @staticmethod
-    def ensure_installed(requested_packages):
-        packages = set(requested_packages)
+        # Get rid of duplicates
+        packages = set(packages)
+        assert "apache2" in packages, "You need to have apache2 in debian.txt"
+        assert "libapache2-mod-wsgi" in packages, "You need to have libapache2-mod-wsgi in debian.txt"
 
         required_packages = []
         for package in packages:
+            assert package in supported_packages, "package %s must be added to supported_packages" % package
+
             if PackageManager.is_package_installed(package):
                 print "{0} is already installed".format(package)
             else:
@@ -50,6 +51,7 @@ class PackageManager:
 
     @staticmethod
     def _install_mysql():
+        raise NotImplementedError("You need to implement mysql-server install!")
         sudo("export DEBIAN_FRONTEND=noninteractive apt-get -qq -y install mysql-server")
 
         # Set password

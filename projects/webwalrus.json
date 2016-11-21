@@ -9,7 +9,7 @@
         "name"      : "landing",
         "sub_url"   : "/",
         "path"      : "/var/www/landing",
-        "deploy"    : true
+        "deploy"    : false
     },
     {
         "name"      : "resume",
@@ -29,10 +29,10 @@
         "path"      : "/var/www/queens_speech",
         "deploy"    : false
     },
-        {
+    {
         "name"      : "links",
         "sub_url"   : "/links",
         "path"      : "/var/www/links",
-        "deploy"    : false
+        "deploy"    : true
     }
 ]

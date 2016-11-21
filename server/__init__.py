@@ -1,7 +1,6 @@
 from server_utility import ServerUtils
 from flask_project import FlaskProject
 from apache import Apache
-from wsgi import WSGI
 from pip_manager import Pip
 from package_manager import PackageManager
 
@@ -12,11 +11,11 @@ def setup(apps,host):
     ServerUtils.set_timezone()
     
     # Install Debian packages
-    packages = PackageManager.get_required_packages(apps)
-    PackageManager.ensure_installed(packages)
+    debian_package_files = FlaskProject.get_debian_requirements(apps)
+    PackageManager.ensure_installed(debian_package_files)
 
     # Install Python packages
-    requirements_files = FlaskProject.get_app_requirements(apps)
+    requirements_files = FlaskProject.get_pip_requirements(apps)
     Pip.ensure_installed(requirements_files)
 
     # Setup Flask applications on Apache
@@ -29,8 +28,6 @@ def setup(apps,host):
     for app in FlaskProject.get_deployable_apps(apps):
         
         FlaskProject.upload_app(app)
-        WSGI.upload_wgsi_file(app)
-
         apache.add(app)
 
     apache.write_config(host)

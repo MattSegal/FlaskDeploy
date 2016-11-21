@@ -2,8 +2,8 @@
     {
         "name"      : "test",
         "sub_url"   : "/test",
-        "path"   	: "/var/www/test",
-        "deploy" 	: true
+        "path"      : "/var/www/test",
+        "deploy"    : true
     },
     {
         "name"      : "chris_profile",

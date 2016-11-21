@@ -19,7 +19,7 @@ if "password" in host.keys():
 
 def deploy():
     assert env.project_name, "project_name value must be set."
-    assert env.branch_name, "branch_name value must be set." # Currently unused
+    assert env.branch_name, "branch_name value must be set."
 
     # Load application data
     project_file = "projects\\{0}.json".format(env.project_name)
@@ -29,7 +29,6 @@ def deploy():
     # Stage applications
     branch_name = env.branch_name
     for app in apps:
-        # use branch_name here
         pre_deploy.stage_app(app["name"],branch_name)
 
     # Deploy
