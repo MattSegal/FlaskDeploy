@@ -16,17 +16,27 @@ The app works as follows:
 * Configures Apache2 to host the installed Flask apps
 
 **Flask App Project Structure**
+
 This is the assumed project structure of Flask apps that this tool deploys
 
 ./
+
 |-- /app
+
 |   |-- __init__.py     _(required)_
+
 |
+
 |-- wsgi.py             _(required)_
+
 |-- deploy.json         _determines which files are pruned/deployed (required)_
+
 |-- requirements.txt    _python packages installed (required)_
+
 |-- debian.txt          _debian packages installed (required)_ 
+
 |-- config.py.prod      _will be transformed to config.py_
+
 |-- config.py           _will be deleted_
 
 **Goals**
