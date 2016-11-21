@@ -28,6 +28,8 @@ def deploy():
 
     # Stage applications
     branch_name = env.branch_name
+    apps = [app for app in apps if app["deploy"]]
+
     for app in apps:
         pre_deploy.stage_app(app["name"],branch_name)
 

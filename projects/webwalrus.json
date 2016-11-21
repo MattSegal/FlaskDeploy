@@ -15,13 +15,13 @@
         "name"      : "resume",
         "sub_url"   : "/resume",
         "path"      : "/var/www/resume",
-        "deploy"    : true
+        "deploy"    : false
     },
     {
         "name"      : "visual_algo",
         "sub_url"   : "/sort",
         "path"      : "/var/www/visual_algo",
-        "deploy"    : true
+        "deploy"    : false
     },
     {
         "name"      : "queens_speech",
