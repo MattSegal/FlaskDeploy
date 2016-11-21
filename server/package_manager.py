@@ -22,6 +22,7 @@ class PackageManager:
             with open(req_file,'r') as f:
                 requirements = f.read()
             packages+= requirements.split('\n')
+            os.remove(req_file)
 
         # Get rid of duplicates
         packages = set(packages)

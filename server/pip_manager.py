@@ -1,3 +1,4 @@
+import os
 from fabric.api import sudo
 
 class Pip():
@@ -11,6 +12,7 @@ class Pip():
             with open(req_file,'r') as f:
                 requirements = f.read()
             packages+= requirements.split('\n')
+            os.remove(req_file)
 
         # Get rid of duplicates, ignore version numbers
         format_name = lambda name : name.split('==')[0].lower()
