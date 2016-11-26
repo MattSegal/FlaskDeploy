@@ -9,30 +9,30 @@
         "name"      : "landing",
         "sub_url"   : "/",
         "path"      : "/var/www/landing",
-        "deploy"    : false
+        "deploy"    : true
     },
     {
         "name"      : "resume",
         "sub_url"   : "/resume",
         "path"      : "/var/www/resume",
-        "deploy"    : false
+        "deploy"    : true
     },
     {
         "name"      : "visual_algo",
         "sub_url"   : "/sort",
         "path"      : "/var/www/visual_algo",
-        "deploy"    : false
+        "deploy"    : true
     },
     {
         "name"      : "queens_speech",
         "sub_url"   : "/words",
         "path"      : "/var/www/queens_speech",
-        "deploy"    : false
+        "deploy"    : true
     },
     {
         "name"      : "links",
         "sub_url"   : "/links",
         "path"      : "/var/www/links",
-        "deploy"    : true
+        "deploy"    : false
     }
 ]

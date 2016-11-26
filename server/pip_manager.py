@@ -17,6 +17,7 @@ class Pip():
         # Get rid of duplicates, ignore version numbers
         format_name = lambda name : name.split('==')[0].lower()
         packages = set([format_name(p) for p in packages])
+
         assert "flask" in packages, "Flask must be in requirements.txt"
 
         sudo("pip install --upgrade pip")

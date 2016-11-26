@@ -5,6 +5,7 @@ from pip_manager import Pip
 from package_manager import PackageManager
 
 def setup(apps,host):
+    assert len(apps) > 0, "No apps to deploy"
 
     # Convenience configurations
     ServerUtils.set_bash_rc()
