@@ -42,31 +42,9 @@ class PackageManager:
         if required_packages:
             sudo("apt-get -qq update")
             for package_name in required_packages:
-                if package_name == "mysql-server":
-                    PackageManager._install_mysql()
-                else:
                     sudo("apt-get -qq install {0} -y".format(package_name))
         else:
             print "All packages have already been installed."
-
-    @staticmethod
-    def _install_mysql():
-        sudo("sudo apt-get -y remove mysql-server")
-        # sudo("export DEBIAN_FRONTEND=noninteractive")
-        # sudo("sudo -E apt-get -qq -y install mysql-server")
-        sudo("apt-get -y install -qq mysql-server")
-
-        # Set password
-        print "\n ===== TEMPOARY PASSWORD WORKAROUND ====="
-        print "This is bad and you should feel bad"
-        password_1 = True
-        password_2 = False
-
-        while password_1 != password_2:
-            password_1 = getpass.getpass("MYSQL Password: ")
-            password_2 = getpass.getpass("Confirm MYSQL Password: ")
-            if password_1 == password_2:
-                sudo("mysqladmin -u root password {0}".format(password_1))
 
     @staticmethod
     def is_package_installed(name):
