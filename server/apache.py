@@ -61,7 +61,7 @@ class Apache:
         sudo("touch {0}".format(FLASK_CONFIG_FILE))
 
     def disable_sites(self):
-        is_valid_site = lambda s: s not in ["000-default",""]
+        is_valid_site = lambda s: s not in ["000-default",""] and s.split('.')[-1] == 'conf'
         sites = [s for s in self.get_enabled_sites() if is_valid_site(s)]
         for site in sites:
             sudo("a2dissite {0}".format(site))
