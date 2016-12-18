@@ -48,7 +48,7 @@ These scripts also assume the following relationship:
 
 **Goals**
 
-Setup webwalrus and deploy it to vagrant server
+Setup webwalrus and deploy it to vagrant server (DONE)
 
 **To Do**
 
@@ -57,6 +57,7 @@ Setup webwalrus and deploy it to vagrant server
 * Add MYSQL database backup and restore functionality
 * Add SSH setup
 * Add zip and transfer step to reduce deploy time
+* Add support to deploy from github/any repo, remove arbitrary relative path constraint
 
 **Branching**
 
